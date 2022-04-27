@@ -1,0 +1,57 @@
+#! /bin/python 
+# Name:        Hangman.py
+# Author:      Sean S
+# Revision:    v1.6
+# Description: This is a programme that plays the game Hangman with
+# input form a file
+"""
+    DocString: Hangman game with lives. No artwork
+"""
+
+import random
+import sys
+
+# Selects file, stores it in programme
+with open('C:\labs\words.txt', 'r') as words:
+    alltext = words.read()
+    words = list(map(str, alltext.split()))
+# selects random word, lowercases it and makes it in list
+randomword = random.choice(words).lower()
+rwordlist = list(randomword)
+# Takes len of randomword and create the list of stars
+nostars = len(randomword)
+printstars = nostars * "*"
+dashsplit = list(printstars)
+# Sets lives and creates attempts list for later
+lives = 7
+attempts = []
+
+# Userinput stage with a check if they have already inputted.
+while lives > 0:
+    print(f"Here is the word = {' '.join(dashsplit)}\n")
+    print(f"You are {lives} lives remaining.\n")
+    guess = input("Guess a letter: ").lower()
+    if guess in attempts:
+        print("\nYou have already put this in.\n")
+        print(f"\nThese are your current attempts: {attempts}")
+        continue
+
+    if guess not in rwordlist:
+        print("You have lost a life.\n")
+        lives -= 1
+        attempts.append(guess)
+        continue
+
+    counter = 0
+    for check in rwordlist:
+        if guess == check:
+            dashsplit[counter] = guess
+            counter += 1
+            attempts.append(guess)
+            if (''.join(dashsplit)) == randomword:
+                print(f"The words was {randomword}.\nYou are a Winner\n")
+                sys.exit()
+        else:
+            counter += 1
+
+print(f"Out of lives. The word was {randomword}")
